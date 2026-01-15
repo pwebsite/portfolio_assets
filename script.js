@@ -1,7 +1,4 @@
 /* Super.so 4K Lightbox Script
-   Author: Polly Lal
-   Hosted: https://github.com/pwebsite/portfolio_assets/blob/main/script.js
-
    UPDATED:
    1. Checks if the CLICKED image is inside a '.parent-page__design-projects' container.
    2. Ignores Cover images and Icons.
