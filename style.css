@@ -1,0 +1,146 @@
+/* =======================================================
+   SCOPE: ALL DESIGN PROJECT PAGES
+   Target: .parent-page__design-projects
+   ======================================================= */
+
+/* --- 1. CRITICAL DESKTOP FIX (Force Block Layout) --- */
+.parent-page__design-projects .notion-header {
+    display: block !important;
+    width: 100% !important;
+    border-bottom: none !important;
+    margin-bottom: 0 !important;
+    height: auto !important;
+}
+
+.parent-page__design-projects .notion-header__cover.has-cover {
+    display: block !important;
+    opacity: 1 !important;
+    filter: none !important;
+    height: 35vh !important;
+    min-height: 300px !important;
+    width: 100% !important;
+    position: relative !important;
+    z-index: 1 !important;
+}
+
+.parent-page__design-projects .notion-header__cover img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    display: block !important;
+}
+
+.parent-page__design-projects .notion-header__cover:after {
+    display: none !important;
+}
+
+/* --- 2. TITLE & ICON LAYOUT (Clean Look) --- */
+.parent-page__design-projects .notion-header__content {
+    position: relative !important;
+    bottom: auto !important;
+    top: auto !important;
+    padding-top: 20px !important;
+    margin: 0 auto !important;
+    width: 100% !important;
+    display: block !important;
+    max-width: 900px !important;
+}
+
+.parent-page__design-projects .notion-header__icon-wrapper.has-icon-image,
+.parent-page__design-projects .notion-header__icon-wrapper.has-icon {
+    position: absolute !important;
+    top: -40px !important;
+    bottom: auto !important;
+    left: 0 !important;
+    right: 0 !important;
+    margin: 0 auto !important;
+    z-index: 5 !important;
+}
+
+.parent-page__design-projects .notion-header__title-wrapper {
+    margin-top: 50px !important;
+    margin-bottom: 10px !important;
+    text-align: center !important;
+}
+
+/* --- 3. SECTIONS (H1/H2 Lines) --- */
+.parent-page__design-projects h1.notion-heading {
+    border-bottom: none !important;
+    margin-top: 0 !important;
+    margin-bottom: 24px !important;
+}
+
+/* --- 4. IMAGE SIZING (Automatic First Image Detection) --- */
+
+/* RULE A: The "Hero" Image (First image on ANY project page) */
+.parent-page__design-projects
+    .notion-root
+    > .notion-image:nth-child(1 of .notion-image)
+    img {
+    max-width: 100% !important;
+    width: 100% !important;
+}
+
+/* RULE B: All Other Images (Default to 50%) */
+.parent-page__design-projects .notion-image img {
+    width: auto !important;
+    max-width: 50% !important;
+    max-height: 600px !important;
+    display: block !important;
+    margin: 20px auto !important;
+    object-fit: contain !important;
+}
+
+/* RULE C: Specific Exceptions (Grid images forced to 25%) */
+.parent-page__design-projects
+    .notion-image
+    img[src*="LR74Ztw1hJyf9jf8YMCxL6o0MQ"],
+.parent-page__design-projects
+    .notion-image
+    img[src*="BaFY2jMQPH9iJvxa3SqxrPvMso"],
+.parent-page__design-projects
+    .notion-image
+    img[src*="Wc5jG0pjzE2rV2CYb8yd5DjH64"] {
+    max-width: 25% !important;
+}
+
+/* =======================================================
+   5. VIDEO SIZING (Targeting via Vimeo IDs)
+   ======================================================= */
+
+/* Landscape Videos (Global Default) */
+.parent-page__design-projects .notion-embed,
+.parent-page__design-projects .notion-video {
+    max-width: 700px !important;
+    width: 100% !important;
+    margin: 20px auto !important;
+    display: block !important;
+}
+
+/* Portrait Videos (Specific Vimeo IDs) */
+/* If you add new portrait videos, just add a new line: */
+/* .parent-page__design-projects .notion-embed:has(iframe[src*="NEW_ID"]), */
+
+.parent-page__design-projects .notion-embed:has(iframe[src*="1059923068"]),
+.parent-page__design-projects .notion-embed:has(iframe[src*="1059923101"]) {
+    max-width: 240px !important;
+}
+
+/* =======================================================
+   FIX FOR PAGES WITHOUT COVER IMAGES (e.g. Home)
+   ======================================================= */
+.notion-header__cover.no-cover {
+    display: none !important;
+    height: 0 !important;
+    min-height: 0 !important;
+    padding: 0 !important;
+}
+
+.notion-header__content.no-cover {
+    padding-top: 40px !important;
+    margin-top: 0 !important;
+}
+
+.notion-header__content.no-cover .notion-header__title-wrapper {
+    margin-top: 0 !important;
+}
