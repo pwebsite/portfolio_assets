@@ -1,4 +1,4 @@
-/* Super.so 4K Lightbox Script (Robust Close) */
+/* Super.so 4K Lightbox Script (Final Robust Version) */
 (function () {
   // Prevent double-loading
   if (window.hasSuperLightbox) return;
@@ -109,6 +109,7 @@
       cursor: "pointer",
       zIndex: "2147483648",
       opacity: "0.8",
+      pointerEvents: "auto", // Ensures it captures clicks
     });
 
     // 9. ASSEMBLE
@@ -124,13 +125,15 @@
 
     // 10. CLOSE TRIGGERS
     // Close when clicking the background, the image, or the X
-    overlay.onclick = function () {
-      closeLightbox();
+    overlay.onclick = function (e) {
+      // Only close if clicking the overlay background directly
+      if (e.target === overlay) closeLightbox();
     };
     largeImg.onclick = function () {
       closeLightbox();
     };
-    closeBtn.onclick = function () {
+    closeBtn.onclick = function (e) {
+      e.stopPropagation(); // Stop bubble up
       closeLightbox();
     };
   });
