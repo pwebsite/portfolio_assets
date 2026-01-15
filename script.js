@@ -1,187 +1,147 @@
-<<<<<<< HEAD
-/* Super.so 4K Lightbox Script
-   UPDATED:
-   1. Checks if the CLICKED image is inside a '.parent-page__design-projects' container.
-   2. Ignores Cover images and Icons.
-*/
+/* Super.so 4K Lightbox Script (Robust Close) */
+(function () {
+  // Prevent double-loading
+  if (window.hasSuperLightbox) return;
+  window.hasSuperLightbox = true;
 
-document.addEventListener("click", function (e) {
-  const target = e.target;
+  // --- CLOSE FUNCTION ---
+  function closeLightbox() {
+    const overlay = document.getElementById("super-lightbox-overlay");
+    if (overlay) {
+      overlay.style.opacity = "0";
+      const img = overlay.querySelector("img");
+      if (img) img.style.transform = "scale(0.95)";
 
-  // --- 1. BASIC CHECKS ---
-  // Must be an IMG tag
-  if (target.tagName !== "IMG") return;
-
-  // --- 2. SCOPE: ONLY PROJECT PAGES ---
-  // We check if the image is a descendant of the specific project class.
-  // If this returns null, the image is NOT on a project page, so we stop.
-  if (!target.closest(".parent-page__design-projects")) return;
-
-  // --- 3. EXCLUSIONS ---
-  // Ignore Cover Images (even if they are on a project page)
-  if (target.closest(".notion-header__cover")) return;
-  // Ignore Page Icons
-  if (target.closest(".notion-header__icon-wrapper")) return;
-  // Ignore Navbar Logo
-  if (target.classList.contains("super-navbar__logo-image")) return;
-
-  // --- 4. ACTION ---
-  // Stop default behavior (opening link/notion modal)
-  e.preventDefault();
-  e.stopPropagation();
-
-  // --- 5. FORCE 4K URL GENERATION ---
-  let highResUrl = target.src;
-
-  // Check if this is a Super.so / Cloudflare image
-  if (
-    highResUrl.includes("images.spr.so") ||
-    highResUrl.includes("imagedelivery")
-  ) {
-    // Super URLs end in options like "/w=1920..." or "/public"
-    // We split the URL and remove the last segment (the current size options)
-    const parts = highResUrl.split("/");
-    parts.pop();
-
-    // Append our forced high-quality options:
-=======
-// --- 4K QUALITY LIGHTBOX SCRIPT ---
-document.addEventListener("click", function (e) {
-  const target = e.target;
-  // 1. Only run for images
-  if (target.tagName !== "IMG") return;
-
-  // 2. Ignore icons/headers
-  if (target.closest(".notion-header__icon-wrapper")) return;
-  if (target.closest(".notion-header__cover")) return;
-  if (target.classList.contains("super-navbar__logo-image")) return;
-
-  // 3. Stop default click
-  e.preventDefault();
-  e.stopPropagation();
-
-  // --- 4. FORCE 4K URL GENERATION ---
-  let highResUrl = target.src;
-
-  // Check if this is a Super.so / Cloudflare image
-  if (
-    highResUrl.includes("images.spr.so") ||
-    highResUrl.includes("imagedelivery")
-  ) {
-    // Super URLs end in options like "/w=1920..." or "/public"
-    // We split the URL and replace the last part with our own 4K settings
-    const parts = highResUrl.split("/");
-
-    // Remove the last segment (the current size options)
-    parts.pop();
-
-    // Append our forced high-quality options
->>>>>>> parent of c49c401 (Update script.js)
-    // w=3840 (4K width), quality=100 (Max quality)
-    highResUrl = parts.join("/") + "/w=3840,quality=100,fit=scale-down";
-  }
-  // Fallback: If not a Super image, try to find the Notion full-size data attribute
-  else {
-    const wrapper = target.closest("span");
-    if (wrapper && wrapper.getAttribute("data-full-size")) {
-      highResUrl = wrapper.getAttribute("data-full-size");
+      setTimeout(() => {
+        if (document.body.contains(overlay)) {
+          document.body.removeChild(overlay);
+        }
+      }, 200);
     }
   }
 
-<<<<<<< HEAD
-  // 6. Create Overlay (The dark background)
-=======
-  // 5. Create Overlay
->>>>>>> parent of c49c401 (Update script.js)
-  const overlay = document.createElement("div");
-  Object.assign(overlay.style, {
-    position: "fixed",
-    top: "0",
-    left: "0",
-    width: "100vw",
-    height: "100vh",
-    backgroundColor: "rgba(0, 0, 0, 0.95)",
-    zIndex: "999999999",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    cursor: "zoom-out",
-    opacity: "0",
-    transition: "opacity 0.2s ease",
-    backdropFilter: "blur(5px)",
+  // --- ESCAPE KEY LISTENER ---
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape") closeLightbox();
   });
 
-<<<<<<< HEAD
-  // 7. Create the Large Image
-=======
-  // 6. Create Image
->>>>>>> parent of c49c401 (Update script.js)
-  const largeImg = document.createElement("img");
-  largeImg.src = highResUrl;
+  // --- CLICK LISTENER ---
+  document.addEventListener("click", function (e) {
+    const target = e.target;
 
-  Object.assign(largeImg.style, {
-    maxWidth: "90%",
-    maxHeight: "90%",
-    objectFit: "contain",
-    boxShadow: "0 20px 50px rgba(0,0,0,0.5)",
-    borderRadius: "4px",
-    transform: "scale(0.95)",
-    transition: "transform 0.2s ease",
-  });
+    // 1. SCOPE CHECK: Are we on a Design Project page?
+    if (!document.querySelector(".parent-page__design-projects")) return;
 
-<<<<<<< HEAD
-  // 8. Assemble and Show
-  overlay.appendChild(largeImg);
-  document.body.appendChild(overlay);
+    // 2. CHECK: Is it an Image?
+    if (target.tagName !== "IMG") return;
 
-  // Small delay to allow the fade-in animation to trigger
-=======
-  // 7. Show it
-  overlay.appendChild(largeImg);
-  document.body.appendChild(overlay);
+    // 3. EXCLUSIONS
+    if (target.closest(".notion-header__cover")) return;
+    if (target.closest(".notion-header__icon-wrapper")) return;
+    if (target.classList.contains("super-navbar__logo-image")) return;
+    // Don't re-trigger if clicking the large image itself
+    if (target.closest("#super-lightbox-overlay")) return;
 
->>>>>>> parent of c49c401 (Update script.js)
-  requestAnimationFrame(() => {
-    overlay.style.opacity = "1";
-    largeImg.style.transform = "scale(1)";
-  });
+    // 4. STOP DEFAULT BEHAVIOR
+    e.preventDefault();
+    e.stopPropagation();
 
-<<<<<<< HEAD
-  // 9. Close on Click
-=======
-  // 8. Close on Click
->>>>>>> parent of c49c401 (Update script.js)
-  overlay.onclick = function () {
-    overlay.style.opacity = "0";
-    largeImg.style.transform = "scale(0.95)";
-    setTimeout(() => {
-<<<<<<< HEAD
-      if (document.body.contains(overlay)) {
-        document.body.removeChild(overlay);
+    // 5. GET HIGH RES URL
+    let highResUrl = target.src;
+    if (
+      highResUrl.includes("images.spr.so") ||
+      highResUrl.includes("imagedelivery")
+    ) {
+      const parts = highResUrl.split("/");
+      parts.pop();
+      highResUrl = parts.join("/") + "/w=3840,quality=100,fit=scale-down";
+    } else {
+      const wrapper = target.closest("span");
+      if (wrapper && wrapper.getAttribute("data-full-size")) {
+        highResUrl = wrapper.getAttribute("data-full-size");
       }
-=======
-      if (document.body.contains(overlay)) document.body.removeChild(overlay);
->>>>>>> parent of c49c401 (Update script.js)
-    }, 200);
-  };
-});
+    }
 
-<<<<<<< HEAD
-// --- 10. HELPER: Add Zoom Cursor (Scoped) ---
-const addCursor = () => {
-  // Select images ONLY inside the project page container
-  // And EXCLUDE the cover image and icons
-  const images = document.querySelectorAll(
-    ".parent-page__design-projects img:not(.notion-header__cover img):not(.notion-header__icon-wrapper img)",
-  );
+    // 6. BUILD OVERLAY
+    const overlay = document.createElement("div");
+    overlay.id = "super-lightbox-overlay"; // ID for easy finding
+    Object.assign(overlay.style, {
+      position: "fixed",
+      top: "0",
+      left: "0",
+      width: "100vw",
+      height: "100vh",
+      backgroundColor: "rgba(0, 0, 0, 0.95)",
+      zIndex: "2147483647",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      cursor: "zoom-out",
+      opacity: "0",
+      transition: "opacity 0.2s ease",
+      backdropFilter: "blur(5px)",
+    });
 
-=======
-// Cursor Style
-const addCursor = () => {
-  const images = document.querySelectorAll(
-    ".super-content img:not(.notion-header__icon-wrapper img)",
-  );
->>>>>>> parent of c49c401 (Update script.js)
-  images.forEach((img) => (img.style.cursor = "zoom-in"));
-};
-setInterval(addCursor, 1000);
+    // 7. BUILD IMAGE
+    const largeImg = document.createElement("img");
+    largeImg.src = highResUrl;
+    Object.assign(largeImg.style, {
+      maxWidth: "90%",
+      maxHeight: "90%",
+      objectFit: "contain",
+      boxShadow: "0 20px 50px rgba(0,0,0,0.5)",
+      borderRadius: "4px",
+      transform: "scale(0.95)",
+      transition: "transform 0.2s ease",
+      cursor: "zoom-out", // Shows you can click image to close
+    });
+
+    // 8. BUILD "X" BUTTON
+    const closeBtn = document.createElement("div");
+    closeBtn.innerHTML = "&times;";
+    Object.assign(closeBtn.style, {
+      position: "absolute",
+      top: "20px",
+      right: "30px",
+      color: "white",
+      fontSize: "40px",
+      fontWeight: "bold",
+      cursor: "pointer",
+      zIndex: "2147483648",
+      opacity: "0.8",
+    });
+
+    // 9. ASSEMBLE
+    overlay.appendChild(largeImg);
+    overlay.appendChild(closeBtn);
+    document.body.appendChild(overlay);
+
+    // Animate In
+    requestAnimationFrame(() => {
+      overlay.style.opacity = "1";
+      largeImg.style.transform = "scale(1)";
+    });
+
+    // 10. CLOSE TRIGGERS
+    // Close when clicking the background, the image, or the X
+    overlay.onclick = function () {
+      closeLightbox();
+    };
+    largeImg.onclick = function () {
+      closeLightbox();
+    };
+    closeBtn.onclick = function () {
+      closeLightbox();
+    };
+  });
+
+  // CURSOR LOGIC
+  setInterval(() => {
+    if (document.querySelector(".parent-page__design-projects")) {
+      const images = document.querySelectorAll(
+        ".parent-page__design-projects .super-content img:not(.notion-header__cover img):not(.notion-header__icon-wrapper img)",
+      );
+      images.forEach((img) => (img.style.cursor = "zoom-in"));
+    }
+  }, 1000);
+})();
